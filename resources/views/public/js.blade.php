@@ -285,6 +285,77 @@
             }
         })
     }
+    function saveTraining() {
+
+        document.getElementById('store_training').innerHTML = "Enregistrement en cours ... <i class='fa fa-spinner fa-spin'></i>";
+        $("#store_training").attr("disabled", true);
+ 
+        var form = $("#createTraining")[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            method: "POST",
+            url: "/admin/storeTraining",
+            enctype: 'multipart/form-data',
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function(msg) {
+                console.log(msg);
+                var val = msg.split("||"); 
+
+                if (val[0] == "false") {
+                    toastr["error"](val[1]);
+
+                    $("#store_training").attr("disabled", false);
+                    $("#store_training").html("Enregistrer");
+
+                } else if (val[0] == "true") {
+                    // var result= JSON.parse(data);
+                    
+                    toastr["success"](val[1]);
+                    setTimeout(() => {
+
+                        location.reload()
+                    }, 1000);
+
+                    $("#createTraining")[0].reset();
+
+                    $("#store_training").attr("disabled", false);
+                    $("#store_training").html("Enregistrer");
+                }
+
+
+            }
+        })
+    }
+
+    function getInfos(){
+        var team=$('#team_id').val(); 
+        console.log(team);       
+        $.ajax({
+            type: "GET",
+            url: "/admin/teamsInfos",
+            data: {
+                team:team
+            },
+            success: function (data) {
+                // var results=JSON.parse(data);
+                var results=data;
+                var output='';
+                output +='<option  hidden>Choisir une équipe</option>';
+                $.each(results, function (index, element) { 
+                    output +='<option value="'+element.team_id+'">'+element.name+'</option>';
+                });
+                // console.log(output)
+                $('#trainings').html(output);
+                
+            }
+        });
+        
+    }
 
     function createUser() {
 
@@ -330,6 +401,8 @@
             }
         })
     }
+    
+
     function saveUserEnter() {
 
         document.getElementById('saveUserEnter').innerHTML = "Enregistrement en cours veuillez patienter... <i class='fa fa-spinner fa-spin'></i>";

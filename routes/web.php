@@ -35,7 +35,13 @@ Route::group(['middleware' => ['admin'], 'prefix' => '/admin'], function () {
     Route::get('/addGamers', 'PlayersController@addGamers')->name('addGamers');
     Route::post('/createGames', 'PlayersController@createGames');
     Route::get('/listsUsers', 'PlayersController@listsUsers')->name('lists.users');
+
     Route::get('/newTraining', 'TrainingsController@create')->name('newTraining');
+    Route::get('/addNotes', 'TrainingsController@createNotes')->name('addNotes');
+    Route::get('/newNotes', 'TrainingsController@newNotes')->name('newNotes');
+    Route::get('/teamsInfos', 'TrainingsController@getInfos')->name('getInfos');
+    ;
+    Route::post('/storeTraining', 'TrainingsController@store');
 });
 Route::group(['middleware' => ['player'], 'prefix' => '/player'], function () { 
 
