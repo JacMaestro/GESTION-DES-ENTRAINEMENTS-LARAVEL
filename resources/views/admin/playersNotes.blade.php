@@ -21,29 +21,24 @@
                                     @csrf
                                     <div class="form-group row">
                                         <div class="col-sm-6 mb-3 mb-sm-0">
-                                            <label>Semaine Début</label>
-                                            <input type="date" class="form-control form-control " id="start_Week" name="start_Week" placeholder="">
-                                        </div>
-                                        <div class="col-sm-6">
-                                            <label>Fin Semaine</label>
-                                            <input type="date" class="form-control form-control " id="end_Week" name="end_Week">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
-                                        <div class="col-sm-6 mb-3 mb-sm-0">
                                             <label for="my-select">Equipes</label>
-                                            <select id="my-select" class="form-control" name="team_id" id="team_id">
+                                            <select id="my-select" class="form-control" name="team_id" id="team_id" onchange="getInfos()">
                                                 <option  hidden>Choisir une équipe</option>
                                                 @foreach ($teams as $team)
-                                                     <option  value="{{$team->id}}">{{$team->name}}</option>
+                                                    <option  value='{{$team->id}}'>{{$team->name}}</option>
                                                 @endforeach
+                                                
                                                
                                             </select>
                                         </div>
                                    
                                         <div class="col-sm-6">
                                             <label>Date d'Entrainement</label>
-                                            <input type="datetime-local" class="form-control form-control " id="date_training" name="date_training">
+                                            <select id="my-select" class="form-control" name="trainings" id="trainings">
+                                                
+                                              
+                                               
+                                            </select>
                                         </div>
    
                                     </div>

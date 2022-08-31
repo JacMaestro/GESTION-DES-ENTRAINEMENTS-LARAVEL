@@ -44,8 +44,13 @@
                 <span>Ajouter Entrainement</span>
             </a>
         </li> 
-        
+        <li class="nav-item {{ Request::routeIs('newNotes') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('newNotes')}}">
+                <i class="fas fa-fw fa-plus"></i>
+                <span>Ajouter Notes</span>
+            </a>
         </li> 
+        
         <hr class="sidebar-divider">
         
     @php } else { @endphp
