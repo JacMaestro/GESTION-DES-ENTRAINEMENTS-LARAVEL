@@ -38,6 +38,13 @@
             <span>Ajouter des joueurs</span>
         </a>
     </li> 
+    <li class="nav-item {{ Request::routeIs('newTraining') ? 'active' : '' }}">
+        <a class="nav-link" href="{{ route('newTraining')}}">
+            <i class="fas fa-fw fa-plus"></i>
+            <span>Ajouter Entrainement</span>
+        </a>
+    </li> 
+   
     <hr class="sidebar-divider">
     @php } else { @endphp
 

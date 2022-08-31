@@ -25,7 +25,10 @@ class TrainingsController extends Controller
     public function create()
     {
         //
+        return view('admin.newTraining');
     }
+
+       
 
     /**
      * Store a newly created resource in storage.
@@ -36,6 +39,25 @@ class TrainingsController extends Controller
     public function store(Request $request)
     {
         //
+        $training = Trainings::create([
+            'firstname' => $request->firstname,
+            'lastname' => $request->lastname,
+            'email' => $request->email,
+            'team_id' => $request->phone,
+            'created_at' => date('Y-m-d H:s:i'),
+        ]);
+        if ($training) {
+
+            echo ("true|| La création du compte a été éffectué avec succès");
+            exit;
+
+        } else {
+
+            echo ("false|| Une erreur s'est produite");
+            exit;
+
+        }
+    
     }
 
     /**

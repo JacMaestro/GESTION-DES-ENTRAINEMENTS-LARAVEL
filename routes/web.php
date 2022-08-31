@@ -35,6 +35,7 @@ Route::group(['middleware' => ['admin'], 'prefix' => '/admin'], function () {
     Route::get('/addGamers', 'PlayersController@addGamers')->name('addGamers');
     Route::post('/createGames', 'PlayersController@createGames');
     Route::get('/listsUsers', 'PlayersController@listsUsers')->name('lists.users');
+    Route::get('/newTraining', 'TrainingsController@create')->name('newTraining');
 });
 Route::group(['middleware' => ['player'], 'prefix' => '/player'], function () { 
 
