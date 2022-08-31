@@ -286,6 +286,50 @@
         })
     }
 
+    function createUser() {
+
+        document.getElementById('saveUsers').innerHTML = "Enregistrement en cours veuillez patienter... <i class='fa fa-spinner fa-spin'></i>";
+        $("#saveUsers").attr("disabled", true);
+ 
+        var form = $("#saveGamersForm")[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            method: "POST",
+            url: "/createUser",
+            enctype: 'multipart/form-data',
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function(msg) {
+                console.log(msg);
+                var val = msg.split("||"); 
+
+                if (val[0] == "false") {
+                    toastr["error"](val[1]);
+
+                    $("#saveUsers").attr("disabled", false);
+                    $("#saveUsers").html("Enregistrer");
+
+                } else if (val[0] == "true") {
+                    toastr["success"](val[1]);
+                    setTimeout(() => {
+
+                        window.location.href = "/login";
+                    }, 1000);
+
+                    $("#saveGamers")[0].reset();
+
+                    $("#saveUsers").attr("disabled", false);
+                    $("#saveUsers").html("Enregistrer");
+                }
+
+
+            }
+        })
+    }
     function saveUserEnter() {
 
         document.getElementById('saveUserEnter').innerHTML = "Enregistrement en cours veuillez patienter... <i class='fa fa-spinner fa-spin'></i>";
