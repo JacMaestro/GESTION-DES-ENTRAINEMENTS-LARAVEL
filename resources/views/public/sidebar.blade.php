@@ -14,51 +14,49 @@
     <hr class="sidebar-divider my-0">
     @php if(session()->get('role') == 'admin') { @endphp
 
-    <!-- Nav Item - Dashboard -->
-    <li class="nav-item {{ Request::routeIs('home') ? 'active' : '' }}">
-        <a class="nav-link" href="/admin/home">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Tableau de bord</span></a>
-    </li>
-    <hr class="sidebar-divider">
-    <div class="sidebar-heading">
-        Utilisateurs
-    </div>
+        <!-- Nav Item - Dashboard -->
+        <li class="nav-item {{ Request::routeIs('home') ? 'active' : '' }}">
+            <a class="nav-link" href="/admin/home">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Tableau de bord</span></a>
+        </li>
+        <hr class="sidebar-divider">
+        <div class="sidebar-heading">
+            Utilisateurs
+        </div>
 
-    <li class="nav-item {{ Request::routeIs('lists.users') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('lists.users')}}">
-            <i class="fas fa-fw fa-users"></i>
-            <span>Liste des joueurs</span>
-        </a>
-    </li>
+        <li class="nav-item {{ Request::routeIs('lists.users') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('lists.users')}}">
+                <i class="fas fa-fw fa-users"></i>
+                <span>Liste des joueurs</span>
+            </a>
+        </li>
 
-    <li class="nav-item {{ Request::routeIs('addGamers') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('addGamers')}}">
-            <i class="fas fa-fw fa-plus"></i>
-            <span>Ajouter des joueurs</span>
-        </a>
-<<<<<<< HEAD
-    </li> 
-    <li class="nav-item {{ Request::routeIs('newTraining') ? 'active' : '' }}">
-        <a class="nav-link" href="{{ route('newTraining')}}">
-            <i class="fas fa-fw fa-plus"></i>
-            <span>Ajouter Entrainement</span>
-        </a>
-    </li> 
-   
-=======
-    </li>
->>>>>>> e0f45adc6706a7333f449fe3d08bc7383909e130
-    <hr class="sidebar-divider">
+        <li class="nav-item {{ Request::routeIs('addGamers') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('addGamers')}}">
+                <i class="fas fa-fw fa-plus"></i>
+                <span>Ajouter des joueurs</span>
+            </a> 
+        </li> 
+        <li class="nav-item {{ Request::routeIs('newTraining') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('newTraining')}}">
+                <i class="fas fa-fw fa-plus"></i>
+                <span>Ajouter Entrainement</span>
+            </a>
+        </li> 
+        
+        </li> 
+        <hr class="sidebar-divider">
+        
     @php } else { @endphp
 
-    <!-- Nav Item - Dashboard -->
-    <li class="nav-item {{ Request::routeIs('home') ? 'active' : '' }}">
-        <a class="nav-link" href="/player/home">
-            <i class="fas fa-fw fa-tachometer-alt"></i>
-            <span>Tableau de bord</span></a>
-    </li>
-    <hr class="sidebar-divider">
+         <!-- Nav Item - Dashboard -->
+        <li class="nav-item {{ Request::routeIs('home') ? 'active' : '' }}">
+            <a class="nav-link" href="/player/home">
+                <i class="fas fa-fw fa-tachometer-alt"></i>
+                <span>Tableau de bord</span></a>
+        </li>
+        <hr class="sidebar-divider">
 
 
     @php } @endphp
