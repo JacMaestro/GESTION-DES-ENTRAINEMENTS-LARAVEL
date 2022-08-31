@@ -50,6 +50,9 @@
                                     </form>
                                     <div class="text-center mt-3"> 
                                     </div>
+                                    <div class="text-center">
+                                        <a class="small" href="/register">Créer un compte !</a>
+                                    </div>
                                     <hr> 
                                     <div class="text-center">
                                         <a class="small" href="/forgot">Vous avez oublié votre mot de passe ?</a>

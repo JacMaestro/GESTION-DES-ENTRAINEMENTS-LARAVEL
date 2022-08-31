@@ -23,8 +23,8 @@ Route::post('/verify', 'PlayersController@verifyLogin')->name('verify');
 Route::get('/login', 'PlayersController@login')->name('login'); 
 Route::post('/resetPass', 'PlayersController@resetPass')->name('resetPass');
 Route::get('/logout', 'PlayersController@logout')->name('logout');
-Route::get('/forgot', 'PlayersController@forgot')->name('forgot');
-Route::post('/createUser', 'PlayersController@createUser')->name('createUser');
+Route::get('/forgot', 'PlayersController@forgot')->name('forgot'); 
+Route::post('/createUser', 'PlayersController@createGames')->name('createUser');
 
 
 Route::group(['middleware' => ['admin'], 'prefix' => '/admin'], function () { 

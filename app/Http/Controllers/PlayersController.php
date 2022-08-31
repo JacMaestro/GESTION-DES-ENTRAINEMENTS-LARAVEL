@@ -55,6 +55,16 @@ class PlayersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public function register()
+    {
+        return view('auth.register');
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function addGamers()
     {
         return view('admin.addGamers');
