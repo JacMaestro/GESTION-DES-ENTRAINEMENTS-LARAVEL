@@ -11,7 +11,8 @@
     </a>
 
     <!-- Divider -->
-    <hr class="sidebar-divider my-0"> 
+    <hr class="sidebar-divider my-0">
+    @php if(session()->get('role') == 'admin') { @endphp
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item {{ Request::routeIs('home') ? 'active' : '' }}">
@@ -20,30 +21,37 @@
             <span>Tableau de bord</span></a>
     </li>
     <hr class="sidebar-divider">
-    @php if(session()->get('role') == 'admin') { @endphp
     <div class="sidebar-heading">
         Utilisateurs
     </div>
- 
+
     <li class="nav-item {{ Request::routeIs('lists.users') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('lists.users')}}">
             <i class="fas fa-fw fa-users"></i>
             <span>Liste des joueurs</span>
         </a>
-    </li> 
+    </li>
 
     <li class="nav-item {{ Request::routeIs('addGamers') ? 'active' : '' }}">
         <a class="nav-link" href="{{ route('addGamers')}}">
             <i class="fas fa-fw fa-plus"></i>
             <span>Ajouter des joueurs</span>
         </a>
-    </li> 
+    </li>
     <hr class="sidebar-divider">
     @php } else { @endphp
 
-        
+    <!-- Nav Item - Dashboard -->
+    <li class="nav-item {{ Request::routeIs('home') ? 'active' : '' }}">
+        <a class="nav-link" href="/player/home">
+            <i class="fas fa-fw fa-tachometer-alt"></i>
+            <span>Tableau de bord</span></a>
+    </li>
+    <hr class="sidebar-divider">
+
+
     @php } @endphp
- 
+
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">
         <button class="rounded-circle border-0" id="sidebarToggle"></button>
