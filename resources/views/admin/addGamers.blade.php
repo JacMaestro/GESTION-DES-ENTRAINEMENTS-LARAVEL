@@ -43,7 +43,9 @@
                                         <div class="form-group">
                                             <label for="my-select">Equipes</label>
                                             <select id="my-select" class="form-control" name="teams" id="teams">
-                                                <option selected value="1">As Craponne</option>
+                                                @foreach ($teams as $team)
+                                                     <option  value="{{$team->id}}">{{$team->name}}</option>
+                                                @endforeach
                                             </select>
                                         </div>
                                     </div>
