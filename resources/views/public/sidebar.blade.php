@@ -50,6 +50,12 @@
                 <span>Ajouter Notes</span>
             </a>
         </li> 
+        <li class="nav-item {{ Request::routeIs('playerNotes') ? 'active' : '' }}">
+            <a class="nav-link" href="{{ route('playerNotes')}}">
+                <i class="fas fa-fw fa-plus"></i>
+                <span>Notes Joueurs</span>
+            </a>
+        </li> 
         
         <hr class="sidebar-divider">
         

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Grades;
 use App\Trainings;
 use Illuminate\Http\Request;
 
@@ -87,50 +88,234 @@ class TrainingsController extends Controller
         }
     
     }
-    public function createNotes($id)
+    public function storeNotes(Request $request)
     {
+        if (empty($request->team_id) && empty($request->trainings) && empty($request->selectPlayers) && empty($request->notes)) {
+            echo ("false|| Aucun champ n'est pas renseigné");
+            exit;
+        } else if (empty($request->team_id)) {
+            echo ("false|| Veuillez renseigner l'équipe");
+            exit;
+        } else if (empty($request->trainings)) {
+            echo ("false|| Veuillez renseigner l'entrainement");
+            exit;
+        } else if (empty($request->selectPlayers)) {
+            echo ("false|| Veuillez renseigner le joueur");
+            exit;
+        } 
+        //  dd($request);
         //
-        $players=\DB::table('players')
-                    ->join('teams','teams.id','=','playersteams_id')
-                    ->join('trainings','trainings.teams_id','=','teams.id')
-                    ->select('*')
-                    ->get();
-        return view('admin.playersNotes', compact('players')); 
+        if($request->as && $request->en && $request->vi){
+            $note=3;
+        }else if($request->as && $request->en ||$request->en && $request->vi ||$request->ap && $request->vi){
+            $note=2;
+        }elseif ($request->as || $request->en || $request->vi) {
+            $note=1;
+        }else{
+            $note=0;
+        }
+        $save = Grades::create([
+            'training_id' => $request->trainings,
+            'player_id' => $request->selectPlayers,
+            'note' => $note,
+            'created_at' => date('Y-m-d H:s:i'),
+        ]);
+      
+        if ($save) {
+
+            echo ("true|| Enregistré");
+            exit;
+
+        } else {
+
+            echo ("false|| Erreur");
+            exit;
+
+        }
+    
     }
+  
     public function getInfos()
     {
         
-        //
         $training=\DB::table('teams')
                   ->join('trainings','trainings.team_id','=','teams.id')
                   ->where('teams.id',request('team'))
-                  ->select('*')
+                  ->select('trainings.*')
                   ->get();
-                //   var_dump($training);
+                  
+                //   dd($training);
         echo json_encode($training); 
+    }
+    public function playerInfos()
+    {
+        
+        $training=\DB::table('trainings')
+                  ->where('id',request('training'))
+                  ->select('trainings.*')
+                  ->first();
+        //
+        $players=\DB::table('players')
+                 ->where('team_id',$training->team_id)
+                 ->select('players.*')
+                 ->get();   
+ 
+        $output ='';
+        $output .='<option  hidden> Choisir un joueur</option>';
+
+
+            foreach ($players as $player) {
+                $grades=\DB::table('grades')
+                ->join('trainings','trainings.id','=','training_id')
+                ->join('players','players.id','=','player_id')
+                ->where('player_id',$player->id)
+                ->where('training_id',$training->id)
+                ->select('trainings.*','players.*','grades.*')
+                ->get();
+                if(sizeof($grades) == 0){
+                    
+                    $output .='<option value="'.$player->id.'">'.$player->firstname.' '.$player->lastname.'</option>';
+                    // echo
+                }
+                 
+
+            }
+                  
+// dd($output);die;
+                
+         echo json_encode($output); 
     }
     public function newNotes()
     {
-        //
-        // $training=\DB::table('teams')
-        //           ->join('trainings','trainings.teams_id','=','teams.id')
-        //           ->where('id',$id)
-        //           ->select('*')
-        //           ->first();
-
+       
         $teams=\DB::table('teams')
                   ->where('active_flag',1)
                   ->select('*')
                   ->get();
 
-        // $players=\DB::table('players')
-        //          ->where('team_id',$teams->id)
-        //          ->select('*')
-        //          ->first();
-
 
         return view('admin.playersNotes',compact('teams')); 
     }
+    public function viewNotes()
+    {
+       
+        $teams=\DB::table('teams')
+                  ->where('active_flag',1)
+                  ->select('*')
+                  ->get();
+
+
+        return view('admin.viewNotes',compact('teams')); 
+    }
+    public function pNotes()
+    {
+       
+        $trainings=\DB::table('trainings')
+                  ->join('teams','teams.id','=','trainings.team_id')
+                  ->where('teams.id',request('team'))
+                  ->select('trainings.*')
+                  ->get();
+                  
+        $output='';
+
+                  foreach($trainings as $training){
+                    $grades=\DB::table('grades')
+                        ->join('trainings','trainings.id','=','training_id')
+                        ->join('players','players.id','=','player_id')
+                        ->where('training_id',$training->id)
+                        ->select('trainings.*','players.*','grades.*')
+                        ->get();
+                        
+                        if(sizeof($grades)==0){
+                            $output.='<div class="table-responsive" >
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary" >Entrainement:'.$training->date_training.'</h6>
+                                </div>
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Prénoms</th>
+                                            <th>Note</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr> 
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    </tbody>
+                                </table>
+                            </div>'; 
+                        }else{
+                            $output.='<div class="table-responsive" >
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary" >Entrainement:'.$training->date_training.'</h6>
+                                </div>
+                        
+                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <thead>
+                                    <tr>
+                                        <th>Nom</th>
+                                        <th>Prénoms</th>
+                                        <th>Note</th>
+                                    </tr>
+                                </thead>
+                                <tbody>';
+                                foreach ($grades as $grade) {
+                                    $output.='
+                                            <tr>
+                                                
+                                                    <td>'.$grade->firstname.'</td>
+                                                    <td>'.$grade->lastname.'</td>
+                                                    <td>'.$grade->note.'</td>
+                                                </tr>';    
+                                            }
+                                            
+                                        }
+                                    $output .= '   </tbody>
+                                    </table>
+                                </div>';
+                        }
+
+                        
+
+                    
+    echo json_encode($output);
+         
+    }
+    public function showEvaluatePage()
+    {
+       
+        $teams=\DB::table('teams')
+                  ->where('active_flag',1)
+                  ->select('*')
+                  ->get();
+        return view('admin.playersNotes',compact('teams')); 
+    }
+    // public function evaluate()
+    // {
+    //     $moyenne=
+    //     $players=\DB::table('players')
+    //     ->where('team_id',request('team'))
+    //     ->select('players.*')
+    //     ->get(); 
+    //     foreach($players as $player){
+    //         $grades=\DB::table('grades')
+    //                     ->join('players','players.id','=','player_id')
+    //                     ->where('player_id',$player->id)
+    //                     ->whereBetween('date_training', [$, $])
+    //                     ->select('players.*','grades.*')
+    //                     ->get();
+    //                     if(sizeof($grades)>=2)
+    //         foreach ($grades as $grade) {
+    //             # code...
+    //         }
+    //     }
+        
+    //     return view('admin.playersNotes',compact('teams')); 
+    // }
 
     /**
      * Display the specified resource.

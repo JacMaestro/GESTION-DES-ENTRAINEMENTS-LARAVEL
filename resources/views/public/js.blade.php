@@ -331,10 +331,59 @@
             }
         })
     }
+    function saveNotes() {
 
-    function getInfos(){
-        var team=$('#team_id').val(); 
-        console.log(team);       
+        document.getElementById('store_note').innerHTML = "Enregistrement en cours ... <i class='fa fa-spinner fa-spin'></i>";
+        $("#store_note").attr("disabled", true);
+ 
+        var form = $("#playerNote")[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            method: "POST",
+            url: "/admin/saveNotes",
+            enctype: 'multipart/form-data',
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function(msg) {
+                console.log(msg);
+                var val = msg.split("||"); 
+
+                if (val[0] == "false") {
+                    toastr["error"](val[1]);
+
+                    $("#store_note").attr("disabled", false);
+                    $("#store_note").html("Enregistrer");
+
+                } else if (val[0] == "true") {
+                    // var result= JSON.parse(data);
+                    
+                    toastr["success"](val[1]);
+                    setTimeout(() => {
+
+                        location.reload()
+                    }, 1000);
+
+                    $("#playerNote")[0].reset();
+
+                    $("#store_note").attr("disabled", false);
+                    $("#store_note").html("Enregistrer");
+                }
+
+
+            }
+        })
+    }
+
+    function getInfos(id){ 
+        var e = document.getElementById("team_id");
+        var team = e.value;
+
+        // console.log(team);    
+
         $.ajax({
             type: "GET",
             url: "/admin/teamsInfos",
@@ -342,12 +391,12 @@
                 team:team
             },
             success: function (data) {
-                // var results=JSON.parse(data);
-                var results=data;
+                var results=JSON.parse(data);
+                // var results=data;
                 var output='';
                 output +='<option  hidden>Choisir une équipe</option>';
                 $.each(results, function (index, element) { 
-                    output +='<option value="'+element.team_id+'">'+element.name+'</option>';
+                    output +='<option value="'+element.id+'">'+element.date_training+'</option>';
                 });
                 // console.log(output)
                 $('#trainings').html(output);
@@ -356,6 +405,56 @@
         });
         
     }
+    function getPnotes(id){ 
+        var e = document.getElementById("team_id");
+        var team = e.value;
+
+        // console.log(team);    
+
+        $.ajax({
+            type: "GET",
+            url: "/admin/pNotes",
+            data: {
+                team:team
+            },
+            success: function (data) {
+                var result=JSON.parse(data);
+                $('#tableaux').html(result);
+                
+            }
+        });
+        
+    }
+    function getPlayer(id){ 
+        var e = document.getElementById("trainings");
+        var training = e.value;
+
+        // console.log(team);    
+
+        $.ajax({
+            type: "GET",
+            url: "/admin/playerInfos",
+            data: {
+                training:training
+            },
+            success: function (data) {
+                var results=JSON.parse(data);
+                // var results=data;
+                // var output='';
+                // output +='<option  hidden>Choisir une équipe</option>';
+                // $.each(results, function (index, element) { 
+                //     output +='<option value="'+element.id+'">'+element.date_training+'</option>';
+                // });
+        // console.log(data);    
+                
+                $('#selectPlayers').html(results);
+               
+                
+            }
+        });
+        
+    }
+    
 
     function createUser() {
 
