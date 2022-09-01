@@ -67,7 +67,11 @@ class PlayersController extends Controller
      */
     public function addGamers()
     {
-        return view('admin.addGamers');
+        $teams=\DB::table('teams')
+                  ->where('active_flag',1)
+                  ->select('*')
+                  ->get(); 
+        return view('admin.addGamers', compact('teams'));
     }
     /**
      * Display a listing of the resource.
