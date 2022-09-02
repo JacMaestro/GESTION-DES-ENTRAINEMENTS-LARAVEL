@@ -67,30 +67,36 @@ class TrainingsController extends Controller
         } 
         //  dd($request);
         //
-        $save = Trainings::create([
-            'start_Week' => $request->start_Week,
-            'end_Week' => $request->end_Week,
-            'date_training' => $request->date_training,
-            'team_id' => $request->team_id,
-            'created_at' => date('Y-m-d H:s:i'),
-        ]);
-      
-        if ($save) {
-
-            echo ("true|| Entrainement");
+        $training=\DB::table('trainings')
+                    ->where('start_Week',$request->start_Week)
+                    ->where('end_Week',$request->end_Week)
+                    ->where('team_id',$request->team_id)
+                    ->select('trainings.*')
+                    ->first();
+        if(!$training){
+            $save = Trainings::create([
+                'start_Week' => $request->start_Week,
+                'end_Week' => $request->end_Week,
+                'date_training' => $request->date_training,
+                'team_id' => $request->team_id,
+                'created_at' => date('Y-m-d H:s:i'),
+            ]); 
+            if ($save) {
+                echo ("true|| Entrainement");
+                exit;
+            } else{ 
+                echo ("false|| Erreur");
+                exit;
+            }
+        }  else{ 
+            echo ("false|| Cette semaine existe déjà");
             exit;
-
-        } else {
-
-            echo ("false|| Erreur");
-            exit;
-
-        }
-    
+        }          
     }
+
     public function storeNotes(Request $request)
     {
-        if (empty($request->team_id) && empty($request->trainings) && empty($request->selectPlayers) && empty($request->notes)) {
+        if (empty($request->team_id) && empty($request->trainings) && empty($request->selectPlayers)) {
             echo ("false|| Aucun champ n'est pas renseigné");
             exit;
         } else if (empty($request->team_id)) {
@@ -102,18 +108,20 @@ class TrainingsController extends Controller
         } else if (empty($request->selectPlayers)) {
             echo ("false|| Veuillez renseigner le joueur");
             exit;
-        } 
-        //  dd($request);
-        //
-        if($request->as && $request->en && $request->vi){
-            $note=3;
-        }else if($request->as && $request->en ||$request->en && $request->vi ||$request->ap && $request->vi){
-            $note=2;
-        }elseif ($request->as || $request->en || $request->vi) {
-            $note=1;
-        }else{
-            $note=0;
+        } else if (empty($request->note_1)) {
+            echo ("false|| Veuillez renseigner le joueur");
+            exit;
+        }else if (empty($request->note_2)) {
+            echo ("false|| Veuillez renseigner le joueur");
+            exit;
+        }else if (empty($request->note_3)) {
+            echo ("false|| Veuillez renseigner le joueur");
+            exit;
         }
+        //  dd($request);
+        $tab=[$request->note_1,$request->note_2,$request->note_3];
+        $add=array_sum($tab);
+        $note=$add/15;
         $save = Grades::create([
             'training_id' => $request->trainings,
             'player_id' => $request->selectPlayers,
@@ -157,6 +165,7 @@ class TrainingsController extends Controller
         //
         $players=\DB::table('players')
                  ->where('team_id',$training->team_id)
+                 ->where('role_id',2)
                  ->select('players.*')
                  ->get();   
  
@@ -177,7 +186,7 @@ class TrainingsController extends Controller
                     $output .='<option value="'.$player->id.'">'.$player->firstname.' '.$player->lastname.'</option>';
                     // echo
                 }
-                 
+                
 
             }
                   
@@ -209,14 +218,52 @@ class TrainingsController extends Controller
     }
     public function pNotes()
     {
-       
+          $output='';
+        $output.='<div class="table-responsive" >
+                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                    <h6 class="m-0 font-weight-bold text-primary" >Entrainement:</h6>
+                                </div>
+                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Nom</th>
+                                            <th>Prénoms</th>';
+        
+        // $players=\DB::table('players')
+        //     ->where('team_id',request('team'))
+        //     ->where('role_id',2)
+        //     ->select('players.*')
+        //     ->get();
+
+        // foreach ($players as $player) {
+        //     $notes=\DB::table('grades')
+        //                 ->join('trainings','trainings.id','=','training_id')
+        //                 ->join('players','players.id','=','player_id')
+        //                 ->where('player_id',$player->id)
+        //                 ->select('note')
+        //                 ->get();           
+        //     $tab=[];
+        //     if(sizeof($notes)>=2){
+                
+        //           $add= array_sum($notes);
+        //           $div=sizeof($notes);
+        //           $evaluate=$add/$div;
+        //         }
+
+
+                
+        //     }
+
+
+
+
         $trainings=\DB::table('trainings')
                   ->join('teams','teams.id','=','trainings.team_id')
                   ->where('teams.id',request('team'))
                   ->select('trainings.*')
                   ->get();
                   
-        $output='';
+      
 
                   foreach($trainings as $training){
                     $grades=\DB::table('grades')
@@ -227,16 +274,8 @@ class TrainingsController extends Controller
                         ->get();
                         
                         if(sizeof($grades)==0){
-                            $output.='<div class="table-responsive" >
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary" >Entrainement:'.$training->date_training.'</h6>
-                                </div>
-                                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead>
-                                        <tr>
-                                            <th>Nom</th>
-                                            <th>Prénoms</th>
-                                            <th>Note</th>
+                            
+                                       $output.='<th>'.$training->date_training.'</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -249,20 +288,10 @@ class TrainingsController extends Controller
                                 </table>
                             </div>'; 
                         }else{
-                            $output.='<div class="table-responsive" >
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary" >Entrainement:'.$training->date_training.'</h6>
-                                </div>
-                        
-                            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                <thead>
-                                    <tr>
-                                        <th>Nom</th>
-                                        <th>Prénoms</th>
-                                        <th>Note</th>
+                            $output.=' <th>'.$training->date_training.'</th>
                                     </tr>
                                 </thead>
-                                <tbody>';
+                            <tbody>';
                                 foreach ($grades as $grade) {
                                     $output.='
                                             <tr>
@@ -299,6 +328,7 @@ class TrainingsController extends Controller
     //     $moyenne=
     //     $players=\DB::table('players')
     //     ->where('team_id',request('team'))
+    //     ->where('role_id',2)
     //     ->select('players.*')
     //     ->get(); 
     //     foreach($players as $player){

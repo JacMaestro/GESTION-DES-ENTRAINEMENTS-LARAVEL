@@ -40,16 +40,27 @@
 
                                     </div>
                                     <div class="form-group row">
-                                        <div class="col-sm-6 mb-3 mb-sm-0">
-                                            <label for="my-select">Joueurs</label>
+                                        <div class="col-sm-8 mb-3 mb-sm-0">
+                                            <label for="selectPlayers">Joueurs</label>
                                             <select class="form-control" name="selectPlayers" id="selectPlayers" >
                                             </select>
                                         </div>
-                                        <div class="col-sm-6 mb-3">
-                                           <input  type="checkbox" class="form-control" id="1" name='as'>
-                                           <input  type="checkbox" class="form-control" id="2" name='en'>
-                                           <input  type="checkbox" class="form-control" id="3" name='vi'>
+                                       
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-sm-3 mb-3 mb-sm-0">
+                                            <label for="selectPlayers">Joueurs</label>
+                                            <input  type="number" class="form-control" min="1" max="5" id="note_1" name='note_1'>
                                         </div>
+                                        <div class="col-sm-3 mb-3 mb-sm-0">
+                                            <label for="selectPlayers">Joueurs</label>
+                                            <input  type="number" class="form-control" min="1" max="5" id="note_2" name='note_2'>
+                                        </div>
+                                        <div class="col-sm-3 mb-3 mb-sm-0">
+                                            <label for="selectPlayers">Joueurs</label>
+                                            <input  type="number" class="form-control" min="1" max="5" id="note_3" name='note_3'>
+                                        </div>
+                                        
                                        
                                     </div>
                                     <a type="button" id="store_note" onclick="saveNotes()" class="btn btn-primary">
