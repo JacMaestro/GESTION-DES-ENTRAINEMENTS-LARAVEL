@@ -121,7 +121,7 @@ class TrainingsController extends Controller
         //  dd($request);
         $tab=[$request->note_1,$request->note_2,$request->note_3];
         $add=array_sum($tab);
-        $note=$add/5;
+        $note=$add/15;
         $save = Grades::create([
             'training_id' => $request->trainings,
             'player_id' => $request->selectPlayers,

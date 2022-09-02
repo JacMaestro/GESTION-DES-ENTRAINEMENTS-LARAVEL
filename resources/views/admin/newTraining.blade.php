@@ -20,12 +20,6 @@
                                 <form class="user" id="createTraining">
                                     @csrf
                                     <div class="form-group row">
-                                        <div class="col-sm-8 mb-3 mb-sm-0">
-                                            <label>Date d'Entrainement</label>
-                                            <input type="month" class="form-control form-control " id="month" name="month">
-                                        </div>
-                                    </div>
-                                    <div class="form-group row">
                                         <div class="col-sm-6 mb-3 mb-sm-0">
                                             <label>Semaine Début</label>
                                             <input type="date" class="form-control form-control " id="start_Week" name="start_Week" placeholder="">
