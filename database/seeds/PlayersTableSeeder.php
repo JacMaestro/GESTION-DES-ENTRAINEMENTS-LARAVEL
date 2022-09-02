@@ -25,6 +25,16 @@ class PlayersTableSeeder extends Seeder
                 'team_id' => 1,
                 'role_id' => 1
             ]); 
+            Players::create([
+                'firstname'           => 'Joeur',
+                'lastname'           => 'J',
+                'phone'           => '+33 000 000 00',
+                'email'          => 'ex@ex.fr',
+                'password'       => Hash::make(123456789),  
+                'active_flag' => 1,
+                'team_id' => 1,
+                'role_id' => 2
+            ]); 
     }
     }
 }

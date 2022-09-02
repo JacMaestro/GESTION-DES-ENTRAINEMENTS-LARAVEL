@@ -40,22 +40,16 @@
         </li> 
         <li class="nav-item {{ Request::routeIs('newTraining') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('newTraining')}}">
-                <i class="fas fa-fw fa-plus"></i>
-                <span>Ajouter Entrainement</span>
+            <i class="fas  fa-fw fa-list"></i>
+                <span>Entrainement</span>
             </a>
         </li> 
         <li class="nav-item {{ Request::routeIs('newNotes') ? 'active' : '' }}">
             <a class="nav-link" href="{{ route('newNotes')}}">
-                <i class="fas fa-fw fa-plus"></i>
-                <span>Ajouter Notes</span>
+                <i class="fas fa-fw fa-list"></i>
+                <span>Notes</span>
             </a>
-        </li> 
-        <li class="nav-item {{ Request::routeIs('playerNotes') ? 'active' : '' }}">
-            <a class="nav-link" href="{{ route('playerNotes')}}">
-                <i class="fas fa-fw fa-plus"></i>
-                <span>Notes Joueurs</span>
-            </a>
-        </li> 
+        </li>  
         
         <hr class="sidebar-divider">
         

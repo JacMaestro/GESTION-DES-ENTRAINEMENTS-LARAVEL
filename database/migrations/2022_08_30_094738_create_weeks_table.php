@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTrainingsTable extends Migration
+class CreateWeeksTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateTrainingsTable extends Migration
      */
     public function up()
     {
-        Schema::create('trainings', function (Blueprint $table) {
+        Schema::create('weeks', function (Blueprint $table) {
             $table->bigIncrements('id')->onDelete('cascade');
-            $table->dateTime('start_Week')->nullable()->default(now());
-            $table->dateTime('end_Week')->nullable()->default(now());
-            $table->dateTime('date_training');  
-            $table->foreignId('week_id')->references('id')->on('weeks')->onDelete('cascade'); 
+            $table->string('name');
+            $table->dateTime('start_Week');
+            $table->dateTime('end_Week');
+            $table->integer('on_flag')->nullable()->default(0); 
             $table->foreignId('team_id')->references('id')->on('teams')->onDelete('cascade'); 
             $table->timestamps();
         });
@@ -31,6 +31,6 @@ class CreateTrainingsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('trainings');
+        Schema::dropIfExists('weeks');
     }
 }

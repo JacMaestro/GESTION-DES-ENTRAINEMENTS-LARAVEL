@@ -331,6 +331,52 @@
             }
         })
     }
+    function saveWeek() {
+
+        document.getElementById('store_week').innerHTML = "Enregistrement en cours ... <i class='fa fa-spinner fa-spin'></i>";
+        $("#store_training").attr("disabled", true);
+ 
+        var form = $("#createWeek")[0];
+        var formData = new FormData(form);
+
+        $.ajax({
+            method: "POST",
+            url: "/admin/storeWeek",
+            enctype: 'multipart/form-data',
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            success: function(msg) {
+                console.log(msg);
+                var val = msg.split("||"); 
+
+                if (val[0] == "false") {
+                    toastr["error"](val[1]);
+
+                    $("#store_week").attr("disabled", false);
+                    $("#store_week").html("Enregistrer");
+
+                } else if (val[0] == "true") {
+                    // var result= JSON.parse(data);
+                    
+                    toastr["success"](val[1]);
+                    setTimeout(() => {
+
+                        location.reload()
+                    }, 1000);
+
+                    $("#createWeek")[0].reset();
+
+                    $("#store_week").attr("disabled", false);
+                    $("#store_week").html("Enregistrer");
+                }
+
+
+            }
+        })
+    }
     function saveNotes() {
 
         document.getElementById('store_note').innerHTML = "Enregistrement en cours ... <i class='fa fa-spinner fa-spin'></i>";
@@ -381,8 +427,7 @@
     function getInfos(id){ 
         var e = document.getElementById("team_id");
         var team = e.value;
-
-        // console.log(team);    
+ 
 
         $.ajax({
             type: "GET",
@@ -393,38 +438,78 @@
             success: function (data) {
                 var results=JSON.parse(data);
                 // var results=data;
-                var output='';
-                output +='<option  hidden>Choisir une équipe</option>';
-                $.each(results, function (index, element) { 
-                    output +='<option value="'+element.id+'">'+element.date_training+'</option>';
-                });
-                // console.log(output)
-                $('#trainings').html(output);
+                // var output='';
+                // output +='<option  hidden>Choisir une équipe</option>';
+                // $.each(results, function (index, element) { 
+                //     output +='<option value="'+element.id+'">'+element.date_training+'</option>';
+                // });
+                // // console.log(output)
+                $('#week_id').html(results);
                 
             }
         });
         
     }
-    function getPnotes(id){ 
-        var e = document.getElementById("team_id");
-        var team = e.value;
-
-        // console.log(team);    
+    function getInfosNote(id){ 
+        var e = document.getElementById("team_id_1");
+        var team = e.value; 
 
         $.ajax({
             type: "GET",
-            url: "/admin/pNotes",
+            url: "/admin/teamsInfos2",
             data: {
                 team:team
             },
             success: function (data) {
-                var result=JSON.parse(data);
-                $('#tableaux').html(result);
+                var results=JSON.parse(data); 
+
+                $('#training_id').html(results);
+                getInfosNote2(id);
                 
             }
         });
         
     }
+
+    function getInfosNote2(id){ 
+        var e = document.getElementById("team_id_1");
+        var team = e.value; 
+
+        $.ajax({
+            type: "GET",
+            url: "/admin/teamsInfos3",
+            data: {
+                team:team
+            },
+            success: function (data) {
+                var results=JSON.parse(data); 
+
+                $('#player_id').html(results);
+                
+            }
+        });
+        
+    }
+    // function getPnotes(id){ 
+    //     var e = document.getElementById("team_id");
+    //     var team = e.value;
+
+    //     // console.log(team);    
+
+    //     $.ajax({
+    //         type: "GET",
+    //         url: "/admin/pNotes",
+    //         data: {
+    //             team:team
+    //         },
+    //         success: function (data) {
+    //             var result=JSON.parse(data);
+    //             $('#tableaux').html(result);
+                
+    //         }
+    //     });
+        
+    // }
     function getPlayer(id){ 
         var e = document.getElementById("trainings");
         var training = e.value;

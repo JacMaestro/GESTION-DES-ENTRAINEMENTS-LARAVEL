@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Grades;
 use App\Trainings;
+use App\Weeks;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class TrainingsController extends Controller
 {
@@ -27,10 +29,23 @@ class TrainingsController extends Controller
     {
         //
         $teams=\DB::table('teams')
-                  ->where('active_flag',1)
-                  ->select('*')
-                  ->get();
-        return view('admin.newTraining', compact('teams'));
+        ->where('active_flag',1)
+        ->select('*')
+        ->get(); 
+
+                  
+                $trainings=\DB::table('trainings')
+                ->join('weeks','trainings.week_id','=','weeks.id')
+                ->join('teams','weeks.team_id','=','teams.id') 
+                ->select('trainings.*','teams.*','teams.name as team_name','weeks.*')
+                ->get();
+
+                  $weeks=\DB::table('weeks') 
+                            ->select('weeks.*')
+                            ->get();
+
+                            // dd($trainings);
+        return view('admin.newTraining', compact('teams','trainings','weeks'));
     }
 
        
@@ -41,10 +56,53 @@ class TrainingsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function storeTraining(Request $request)
     {
-        if (empty($request->start_Week) && empty($request->end_Week) && empty($request->date_training) && empty($request->team_id) && empty($request->start_Week)) {
-            echo ("false|| Aucun champ n'est pas renseigné");
+
+        if (empty($request->date_training)) {
+            echo ("false|| La date d'entrainement n'est pas renseigné");
+            exit;
+        } else {
+                 
+            $date = date('Y-m-d', strtotime($request->date_training));
+    
+            $verify_training_week = DB::select("SELECT w.* FROM weeks w WHERE ('$date' BETWEEN w.start_Week AND w.end_Week)");
+
+            if(sizeof($verify_training_week) == 0){ 
+                echo ("false|| Cette date d'entrainement n'est pas dans la semaine choisie");
+                exit;
+            } else {
+                    
+                $save = Trainings::create([ 
+                    'date_training' => $request->date_training,
+                    'team_id' => $request->team_id,
+                    'week_id' => $request->week_id
+                ]); 
+
+                if ($save) {
+                    echo ("true|| Entrainement enregistré avec succès");
+                    exit;
+                } else{ 
+                    echo ("false|| Une erreur s'est produite");
+                    exit;
+                }
+            }
+        }
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function storeWeek(Request $request)
+    {
+        if (empty($request->name)) {
+            echo ("false|| Veuillez entrer le libellé de la semaine");
+            exit;
+        } else if (empty($request->start_Week) && empty($request->end_Week)) {
+            echo ("false|| Aucun champ n'a été renseigné");
             exit;
         } else if (empty($request->start_Week)) {
             echo ("false|| Le début de la semaine n'est pas renseigné");
@@ -52,60 +110,43 @@ class TrainingsController extends Controller
         } else if (empty($request->end_Week)) {
             echo ("false|| La fin de la semaine n'est pas renseigné");
             exit;
-        } else if (empty($request->date_training)) {
-            echo ("false|| Veuillez renseigner la date d'entrainement");
-            exit;
         } else if (strtotime($request->start_Week)>strtotime($request->end_Week)) {
             echo ("false|| Veuillez choisir des dates correcte");
-            exit;
-        }  else if (strtotime($request->end_Week)<strtotime($request->date_training) && strtotime($request->start_Week)>strtotime($request->date_training)) {
-            echo ("false|| Cette date n'est n'est pas comprise dans la semainse notifié");
             exit;
         }  else if (empty($request->team_id)) {
             echo ("false|| Veuillez choisir l'équipe concerné");
             exit;
-        } 
-        //  dd($request);
-        //
-        $training=\DB::table('trainings')
-                    ->where('start_Week',$request->start_Week)
-                    ->where('end_Week',$request->end_Week)
-                    ->where('team_id',$request->team_id)
-                    ->select('trainings.*')
-                    ->first();
-        if(!$training){
-            $save = Trainings::create([
+        } else {
+            
+            $save = Weeks::create([
+                'name' => $request->name,
                 'start_Week' => $request->start_Week,
-                'end_Week' => $request->end_Week,
-                'date_training' => $request->date_training,
-                'team_id' => $request->team_id,
-                'created_at' => date('Y-m-d H:s:i'),
+                'end_Week' => $request->end_Week, 
+                'team_id' => $request->team_id
             ]); 
+
             if ($save) {
-                echo ("true|| Entrainement");
+                echo ("true|| La semaine a été enregistrée avec succès");
                 exit;
             } else{ 
-                echo ("false|| Erreur");
+                echo ("false|| Une erreur s'est produite");
                 exit;
             }
-        }  else{ 
-            echo ("false|| Cette semaine existe déjà");
-            exit;
-        }          
-    }
+        }
 
+    }
     public function storeNotes(Request $request)
     {
-        if (empty($request->team_id) && empty($request->trainings) && empty($request->selectPlayers)) {
+        if (empty($request->team_id) && empty($request->training_id) && empty($request->player_id) && empty($request->note_1) && empty($request->note_2) && empty($request->note_3)) {
             echo ("false|| Aucun champ n'est pas renseigné");
             exit;
         } else if (empty($request->team_id)) {
             echo ("false|| Veuillez renseigner l'équipe");
             exit;
-        } else if (empty($request->trainings)) {
-            echo ("false|| Veuillez renseigner l'entrainement");
+        } else if (empty($request->training_id)) {
+            echo ("false|| Veuillez renseigner la date de l'entrainement");
             exit;
-        } else if (empty($request->selectPlayers)) {
+        } else if (empty($request->player_id)) {
             echo ("false|| Veuillez renseigner le joueur");
             exit;
         } else if (empty($request->note_1)) {
@@ -117,43 +158,105 @@ class TrainingsController extends Controller
         }else if (empty($request->note_3)) {
             echo ("false|| Veuillez renseigner le joueur");
             exit;
-        }
-        //  dd($request);
-        $tab=[$request->note_1,$request->note_2,$request->note_3];
-        $add=array_sum($tab);
-        $note=$add/15;
-        $save = Grades::create([
-            'training_id' => $request->trainings,
-            'player_id' => $request->selectPlayers,
-            'note' => $note,
-            'created_at' => date('Y-m-d H:s:i'),
-        ]);
-      
-        if ($save) {
-
-            echo ("true|| Enregistré");
-            exit;
-
         } else {
 
-            echo ("false|| Erreur");
-            exit;
+            $verify_note_week = DB::select("SELECT g.* FROM grades g WHERE (g.team_id = '$request->team_id' AND g.player_id = '$request->player_id' AND g.training_id = '$request->training_id')");
 
+            if(sizeof($verify_note_week) == 1){
+
+                echo ("false||Une note a été attribuée à cet entrainement pour ce joueur");
+                exit;
+            } else {
+                    
+                $tab=[$request->note_1,$request->note_2,$request->note_3];
+
+                $add=array_sum($tab);
+                
+                $moy=$add/3;
+
+                $save = Grades::create([
+                    'team_id' => $request->team_id,
+                    'training_id' => $request->training_id,
+                    'player_id' => $request->player_id,
+                    'note_1' => $request->note_1,
+                    'note_2' => $request->note_2,
+                    'note_3' => $request->note_3,
+                    'moy' => $moy
+                ]);
+            
+                // dd($save);
+                if ($save) {
+
+                    echo ("true|| Note enregistré avec succès");
+                    exit;
+
+                } else {
+
+                    echo ("false|| Une erreur s'est produite");
+                    exit;
+
+                }
+            }
+            
         }
+        //  dd($request);
     
     }
   
     public function getInfos()
     {
         
-        $training=\DB::table('teams')
-                  ->join('trainings','trainings.team_id','=','teams.id')
-                  ->where('teams.id',request('team'))
+        $weeks=\DB::table('weeks') 
+                  ->where('weeks.team_id',request('team'))
+                  ->select('weeks.*')
+                  ->get();
+                   
+        $output = "<option  hidden> Choisir une semaine</option>";
+
+        foreach ($weeks as $key => $value) {
+                    
+            $output .='<option value="'.$value->id.'">'.$value->start_Week.' à '.$value->end_Week.'</option>';
+                    
+        }
+
+
+        echo json_encode($output); 
+    }
+    public function getInfos2()
+    {
+        
+        $trainings=\DB::table('trainings') 
+                  ->where('trainings.team_id',request('team'))
                   ->select('trainings.*')
                   ->get();
-                  
-                //   dd($training);
-        echo json_encode($training); 
+                   
+        $output = "<option  hidden> Choisir une date d'entrainement </option>";
+        // dd($trainings);
+        foreach ($trainings as $key => $value) {
+                    
+            $output .='<option value="'.$value->id.'">'. date('d-m-Y', strtotime($value->date_training)).'</option>';
+                    
+        } 
+
+        echo json_encode($output); 
+    }
+    public function getInfos3()
+    {
+        
+        $players=\DB::table('players') 
+                  ->where([['players.team_id',request('team')],['players.role_id',2]])
+                  ->select('players.*')
+                  ->get();
+                   
+        $output = "<option  hidden> Choisir un joueur </option>";
+        // dd($trainings);
+        foreach ($players as $key => $value) {
+                    
+            $output .='<option value="'.$value->id.'">'. $value->firstname .' '. $value->lastname.'</option>';
+                    
+        } 
+
+        echo json_encode($output); 
     }
     public function playerInfos()
     {
@@ -202,8 +305,29 @@ class TrainingsController extends Controller
                   ->select('*')
                   ->get();
 
+$notes = array();
+                  $players =\DB::table('players') 
+                  ->select('players.*')
+                  ->get();
+                  foreach ($players as $key => $value) {
+                    
+                    
+                    $grades=\DB::table('grades')
+                    ->join('trainings','trainings.id','=','training_id')
+                    ->join('players','players.id','=','player_id') 
+                    ->join('teams','grades.team_id','=','teams.id') 
+                    ->select('trainings.*','players.*','grades.*','grades.id as grade_id','teams.*')
+                    ->where('players.id',$value->id)
+                    ->get();
 
-        return view('admin.playersNotes',compact('teams')); 
+                     $notes[$value->id] = $grades;
+                  }
+
+
+
+                // dd($notes);
+
+        return view('admin.playersNotes',compact('teams','notes','players')); 
     }
     public function viewNotes()
     {

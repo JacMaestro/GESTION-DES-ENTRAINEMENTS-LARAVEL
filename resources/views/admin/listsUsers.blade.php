@@ -56,7 +56,7 @@
                                     <td>{{$user->lastname}}</td>
                                     <td>{{$user->email}}</td>
                                     <td>{{$user->phone}}</td>
-                                    <td>{{$user->created_at}}</td>
+                                    <td>{{date('d-m-Y H:i:s', strtotime($user->created_at))}}</td>
                                     <!-- <td>
                                         @if($user->active_flag == 0)
                                         <span class="badge btn-danger">Non approuvé</span>
@@ -102,7 +102,7 @@
     <div class="row pb-5">
 
         <div class="col-md-12">
-            <a href="/admin/addGamers" class="btn btn-primary float-left mb-2">Enregistrer un joueur</a> &nbsp; 
+            <a href="/admin/addGamers" class="btn btn-primary float-left mb-2">Ajouter des joueurs</a> &nbsp; 
         </div>
 
     </div>

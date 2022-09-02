@@ -16,8 +16,12 @@ class CreateGradesTable extends Migration
         Schema::create('grades', function (Blueprint $table) {
             $table->bigIncrements('id')->onDelete('cascade');
             $table->foreignId('training_id')->references('id')->on('trainings')->onDelete('cascade'); 
+            $table->foreignId('team_id')->references('id')->on('teams')->onDelete('cascade'); 
             $table->foreignId('player_id')->references('id')->on('players')->onDelete('cascade'); 
-            $table->integer('note');  
+            $table->integer('note_1');  
+            $table->integer('note_2');  
+            $table->integer('note_3');  
+            $table->float('moy');  
             $table->timestamps();
         });
     }

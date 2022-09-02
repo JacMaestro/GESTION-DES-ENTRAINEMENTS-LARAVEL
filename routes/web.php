@@ -39,11 +39,14 @@ Route::group(['middleware' => ['admin'], 'prefix' => '/admin'], function () {
     Route::get('/newTraining', 'TrainingsController@create')->name('newTraining');
     Route::get('/newNotes', 'TrainingsController@newNotes')->name('newNotes');
     Route::get('/teamsInfos', 'TrainingsController@getInfos')->name('getInfos');
+    Route::get('/teamsInfos2', 'TrainingsController@getInfos2')->name('getInfos2');
+    Route::get('/teamsInfos3', 'TrainingsController@getInfos3')->name('getInfos3');
     Route::get('/playerInfos', 'TrainingsController@playerInfos')->name('playerInfos');
     Route::get('/playerNotes', 'TrainingsController@viewNotes')->name('playerNotes');
     Route::get('/pNotes', 'TrainingsController@pNotes')->name('pNotes');
     
-    Route::post('/storeTraining', 'TrainingsController@store');
+    Route::post('/storeTraining', 'TrainingsController@storeTraining');
+    Route::post('/storeWeek', 'TrainingsController@storeWeek');
     Route::post('/saveNotes', 'TrainingsController@storeNotes');
 });
 Route::group(['middleware' => ['player'], 'prefix' => '/player'], function () { 
