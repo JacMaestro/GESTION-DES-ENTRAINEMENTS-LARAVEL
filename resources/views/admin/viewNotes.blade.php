@@ -20,7 +20,7 @@
                                     @csrf
                                     <div class="form-group row">
                                         <div class="col-sm-12 mb-6 mb-sm-0">
-                                            <label for="my-select">Equipes</label>
+                                            <label for="my-select">Equipes :</label>
                                             <select class="form-control" name="team_id" id="team_id" onchange="getPnotes($(this).attr('id'))">
                                                 <option hidden>Choisir une équipe</option>
                                                 @foreach ($teams as $team)
@@ -47,7 +47,7 @@
         <div class="col-xl-12 col-lg-17">
             <div class="card shadow mb-4">
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Liste des joueurs</h6>
+                    <h6 class="m-0 font-weight-bold text-primary">Liste des joueurs / Entrainement</h6>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body" id='tableaux'>

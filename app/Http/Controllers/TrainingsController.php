@@ -219,10 +219,7 @@ class TrainingsController extends Controller
     public function pNotes()
     {
           $output='';
-        $output.='<div class="table-responsive" >
-                                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-primary" >Entrainement:</h6>
-                                </div>
+        $output.='<div class="table-responsive" > 
                                 <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
