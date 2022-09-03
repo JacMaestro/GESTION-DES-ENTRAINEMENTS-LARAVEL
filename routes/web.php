@@ -28,16 +28,14 @@ Route::post('/createUser', 'PlayersController@createGames')->name('createUser');
 
 
 Route::group(['middleware' => ['admin'], 'prefix' => '/admin'], function () { 
-    Route::get('/home', function () {
-        return view('admin.index');
-    }); 
- 
+    
     Route::get('/addGamers', 'PlayersController@addGamers')->name('addGamers');
     Route::post('/createGames', 'PlayersController@createGames');
     Route::get('/listsUsers', 'PlayersController@listsUsers')->name('lists.users');
 
     Route::get('/newTraining', 'TrainingsController@create')->name('newTraining');
     Route::get('/newNotes', 'TrainingsController@newNotes')->name('newNotes');
+    Route::get('/home', 'TrainingsController@index')->name('home');
     Route::get('/teamsInfos', 'TrainingsController@getInfos')->name('getInfos');
     Route::get('/teamsInfos2', 'TrainingsController@getInfos2')->name('getInfos2');
     Route::get('/teamsInfos3', 'TrainingsController@getInfos3')->name('getInfos3');

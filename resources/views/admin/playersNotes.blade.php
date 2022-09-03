@@ -83,61 +83,6 @@
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-xl-12 col-lg-17">
-            <div class="card shadow mb-4">
-                <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                    <h6 class="m-0 font-weight-bold text-primary">Liste des notes</h6>
-                </div>
-                <!-- Card Body -->
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                            <thead>
-                                <tr>
-                                    <th>N°</th>
-                                    <th>Equipes</th>
-                                    <th>Nom</th>
-                                    <th>Prénom(s)</th>
-                                    <th>Entrainements</th> 
-                                    <th>Moyenne</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($players as $key => $player)
-                                    @if(sizeof($notes[$player->id]) != 0)    
-                                        <tr>
-                                            <td>{{$key+1}}</td>
-                                            <td>{{ $notes[$player->id][0]->name}}</td>
-                                            <td>{{ $player->lastname}}</td>
-                                            <td>{{ $player->firstname}}</td>
-                                            <td>
-                                                @foreach($notes[$player->id] as $val)
-                                                    <div class="m-1">{{ date('d-m-Y', strtotime($val->date_training))}}</div><br>
-                                                @endforeach
-                                            </td>
-                                            <td>
-                                                @foreach($notes[$player->id] as $val)
-                                                    <div class="m-1">{{ $val->moy}}</div><br>
-                                                @endforeach
-                                            </td>
-                                            <td>
-                                                @foreach($notes[$player->id] as $val)
-                                                    <a class="btn btn-secondary m-1 disabled" id="{{$val->grade_id}}" href=""> <i class="fa fa-edit"></i></a>
-                                                <br>
-                                                @endforeach
-                                            </td>
-                                        </tr>
-                                    @endif
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 @endsection

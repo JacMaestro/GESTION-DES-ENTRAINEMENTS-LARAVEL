@@ -81,7 +81,7 @@ class PlayersController extends Controller
     public function listsUsers()
     {
 
-        $users = DB::select('SELECT a.*, r.* FROM players a INNER JOIN roles r ON a.role_id = r.id ORDER BY a.id DESC ');
+        $users = DB::select('SELECT a.*, r.* FROM players a INNER JOIN roles r ON a.role_id = r.id WHERE a.role_id != 1  ORDER BY a.id DESC ');
 
         return view('admin.listsUsers', compact('users'));
     }

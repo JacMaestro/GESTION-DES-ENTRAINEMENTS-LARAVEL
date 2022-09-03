@@ -17,7 +17,43 @@ class TrainingsController extends Controller
      */
     public function index()
     {
-        //
+       
+        $teams=\DB::table('teams')
+                  ->where('active_flag',1)
+                  ->select('*')
+                  ->get();
+                  $training_count=\DB::table('trainings') 
+                            ->select('*')
+                            ->get();
+                  $player_count=\DB::table('players')
+                            ->where('role_id',2)
+                            ->select('*')
+                            ->get();
+
+            $notes = array();
+                  $players =\DB::table('players') 
+                  ->select('players.*')
+                  ->get();
+                  foreach ($players as $key => $value) {
+                    
+                    
+                    $grades=\DB::table('grades')
+                    ->join('trainings','trainings.id','=','training_id')
+                    ->join('players','players.id','=','player_id') 
+                    ->join('teams','grades.team_id','=','teams.id') 
+                    ->select('trainings.*','players.*','grades.*','grades.id as grade_id','teams.*')
+                    ->where('players.id',$value->id)
+                    ->get();
+
+                     $notes[$value->id] = $grades;
+                  }
+
+
+
+                $nbr_player = count($player_count);
+                $nbr_training = count($training_count);
+
+        return view('admin.index',compact('teams','notes','players','nbr_player','nbr_training')); 
     }
 
     /**
@@ -305,7 +341,7 @@ class TrainingsController extends Controller
                   ->select('*')
                   ->get();
 
-$notes = array();
+            $notes = array();
                   $players =\DB::table('players') 
                   ->select('players.*')
                   ->get();
